@@ -1,1 +1,291 @@
 //Main Code
+import flash.events.MouseEvent;
+var kills:int = 0;
+axe.scaleX *= -1
+
+var rubblex:Number = Math.round(Math.random()*668);
+var rubbley:Number = Math.round(Math.random()*600);
+//Waves
+var zwave:Timer = new Timer(10000,0);
+var nwave:Timer = new Timer(1000,0);
+var zspawn:Timer = new Timer(2000,0);
+var leftPressed:Boolean = false;
+var rightPressed:Boolean = false;
+var upPressed:Boolean = false;
+var downPressed:Boolean = false;
+var nextwave:int = 10;
+zwave.start();
+
+
+		zwave.addEventListener("timer", timerHandler);
+		zwave.start();
+		nwave.start();
+		nwave.addEventListener("timer", timerHandler2);
+ 			
+			function timerHandler2(event:TimerEvent):void
+			{
+				wavetext.text = String("Wave in:"+nextwave)
+				if(nextwave <= 0)
+				{
+					nextwave = 10;
+					
+					
+				}
+				nextwave--;
+				nwave.reset();
+				nwave.start();
+				
+			}
+		function timerHandler(event:TimerEvent):void
+		{
+			
+			addChild(zombie);
+			rumble.x = rubblex;
+			rumble.y = rubbley;
+			 rubblex = Math.round(Math.random() *668);
+			 rubbley = Math.round(Math.random()*600);
+			zwave.reset();
+			zwave.start();
+		}
+		//Spawn Mobs
+		background.addEventListener(Event.ENTER_FRAME, spawnmobs);
+		
+		function spawnmobs(e:Event):void
+		{
+			if(rumble.hitTestObject(background))
+			{
+			
+				rumble.visible=true;
+				zombie2.x = rumble.x;
+				zombie2.y = rumble.y - 25;
+					background.removeEventListener(Event.ENTER_FRAME, spawnmobs);
+			
+			}
+			
+		}
+stage.addEventListener(MouseEvent.MOUSE_MOVE,EnterFrame);
+function EnterFrame(e:Event)
+{
+	axe.rotation = (180*Math.atan2(mouseY-character.y,mouseX-character.x))/Math.PI + 90;
+
+}
+
+character.addEventListener(Event.ENTER_FRAME, update)
+
+function update(e:Event):void
+{
+	if(staminavar < 1)
+	{
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE,EnterFrame)
+	}else{
+		stage.addEventListener(MouseEvent.MOUSE_MOVE,EnterFrame)
+		
+	}
+	axe.x = character.x + 10 
+	axe.y = character.y + 20;
+		
+	if(character.hitTestObject(wall1))
+	{
+		character.x+=6;
+		
+		
+	}
+	if(character.hitTestObject(wall2))
+	{
+		character.x-=6;
+		
+		
+	}
+	if(character.hitTestObject(wall3))
+	{
+		character.y-=6;
+		
+		
+	}
+	if(character.hitTestObject(wall4))
+	{
+		character.y+=6;
+		
+		
+	}
+		if(character.hitTestObject(fence1))
+	{
+		character.x-=6;
+		
+		
+	}
+	if(character.hitTestObject(fence2))
+	{
+		character.y-=6;
+		
+		
+	}
+	if(character.hitTestObject(fence3))
+	{
+		character.x+=6;
+		
+		
+	}
+	if(character.hitTestObject(fence4))
+	{
+		character.y+=6;
+		
+		
+	}
+	
+}
+var staminavar:Number = 100;
+
+stage.addEventListener(MouseEvent.MOUSE_MOVE, stamlose);
+
+function stamlose(e:Event):void
+{
+	
+	staminavar= staminavar - 0.03;
+	
+	
+}
+character.addEventListener(Event.ENTER_FRAME, update2);
+stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+ 
+
+
+var keys:Array = [];
+
+
+function update2(e:Event):void
+{
+	
+	stambar.width = staminavar;
+	if (keys[Keyboard.S])
+     	{
+         	character.y += 6;
+			downPressed = true;
+     	}else{
+			downPressed = false;
+		}
+ 
+	if (keys[Keyboard.W])
+	{
+		character.y -= 6;
+		upPressed = true;
+		
+	}else{
+		upPressed = false;
+		
+	}
+	if (keys[Keyboard.D])
+     	{
+         	character.x += 6;
+			rightPressed = true;
+     	}else{
+			rightPressed = false;
+		}
+ 
+	if (keys[Keyboard.A])
+	{
+		character.x -= 6;
+		leftPressed = true;
+	}else{
+		
+		leftPressed = false;
+	}
+	if(leftPressed == false && rightPressed == false && upPressed == false && downPressed ==  false && staminavar < 100)
+	   
+	   {
+		   staminavar += 0.4;
+		   
+	   }
+	  var wood:int = 0;
+	
+	  if(axe.hitTestObject(tree))
+	   {
+		 
+		 tree.visible = false;
+		 stump.x = tree.x + 20;
+		 stump.y = tree.y + 59;
+		 tree.x = -2000;
+		 axe.rotation = axe.rotation - 25;
+		 wood += 1;
+		 woodtext.text = String("Wood:"+wood)
+		
+	   }
+	
+	if(character.x > zombie.x)
+	{
+		
+		zombie.x+=2;
+		
+	}else{
+		
+		zombie.x-=2;
+		
+	}
+
+	if(character.y > zombie.y)
+	{
+		
+		zombie.y+=2;
+		
+	}else{
+		
+		zombie.y-=2;
+		
+	}
+	
+	if(character.x > zombie2.x)
+	{
+		
+		zombie2.x+=2;
+		
+	}else{
+		
+		zombie2.x-=2;
+		
+	}
+
+	if(character.y > zombie2.y)
+	{
+		
+		zombie2.y+=2;
+		
+	}else{
+		
+		zombie2.y-=2;
+		
+	}
+	
+	if(axe.hitTestObject(zombie))
+	{
+		
+		zombie.x = 300;
+		zombie.y = 300;
+		kills++;
+		killstext.text = String("Kills:" +kills);
+		
+	}
+	if(axe.hitTestObject(zombie2))
+	{
+		
+		zombie2.x = rumble.x;
+		zombie2.y = rumble.y - 25;
+		kills++;
+		killstext.text = String("Kills:" +kills);
+		
+	}
+	
+}
+ 
+function onKeyDown(e:KeyboardEvent):void
+{
+	keys[e.keyCode] = true;
+}
+ 
+function onKeyUp(e:KeyboardEvent):void
+{
+	keys[e.keyCode] = false;
+}
+
+
+
